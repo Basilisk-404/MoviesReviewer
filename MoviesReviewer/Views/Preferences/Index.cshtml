@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<MoviesReviewer.Models.Preference>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Moje preferencje";
 }
 
-<h1>Index</h1>
+<h1>Moje preferencje</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -16,11 +16,9 @@
                 @Html.DisplayNameFor(model => model.Type)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Movie)
             </th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -31,9 +29,6 @@
                 @Html.DisplayFor(modelItem => item.Type)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Movie.Id)
             </td>
             <td>
@@ -41,7 +36,11 @@
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
-        </tr>
+            @if (item.Type == MoviesReviewer.Enums.PreferenceType.WATCHED)
+            {
+                    <td><a asp-action="Create" asp-controller="Reviews">REVIEW</a></td>
+            }
+            </tr>
 }
     </tbody>
 </table>

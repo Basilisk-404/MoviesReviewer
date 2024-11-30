@@ -1,0 +1,58 @@
+﻿@model IEnumerable<MoviesReviewer.Models.Movie>
+
+@{
+    ViewData["Title"] = "My movies";
+}
+
+<h1>My Movies</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Year)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    <form asp-controller="Preferences" asp-action="AddPreference" method="post">
+                        <input type="hidden" name="MovieId" value="@item.Id"/>
+                        <input type="hidden" name="Type" value="@MoviesReviewer.Enums.PreferenceType.WATCHED"/>
+                        <input type="submit" value="OBEJRZANE" class="btn btn-primary" />
+                    </form>
+                </td>
+                <td>
+                    <form asp-controller="Preferences" asp-action="AddPreference" method="post">
+                        <input type="hidden" name="MovieId" value="@item.Id" />
+                        <input type="hidden" name="Type" value="@MoviesReviewer.Enums.PreferenceType.TO_WATCH" />
+                        <input type="submit" value="DO OBEJRZENIA" class="btn btn-success" />
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

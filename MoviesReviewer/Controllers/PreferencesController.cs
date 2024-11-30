@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MoviesReviewer.Data;
+using MoviesReviewer.Enums;
 using MoviesReviewer.Models;
 
 namespace MoviesReviewer.Controllers
@@ -160,6 +163,39 @@ namespace MoviesReviewer.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Preferences/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddPreference([Bind("Id, Type, MovieId")] Preference preference)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var preferenceExists = _context.Preference
+                .Where(p => p.MovieId == preference.MovieId && p.UserId == userId)
+                .Count();
+
+            if(preferenceExists != 0)
+            {
+                ViewBag.ErrorMessage = "Wybrany film istnieje w Twoich preferencjach";
+                return View("CustomErrorView");
+            }
+          
+            preference.UserId = userId;
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(preference);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.ErrorMessage = "An error occured while procesing your request. Please try again later.";
+            return View("CustomErrorView");
         }
 
         private bool PreferenceExists(int id)

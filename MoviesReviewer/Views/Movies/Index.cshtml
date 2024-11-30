@@ -21,6 +21,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.Author)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -37,9 +41,21 @@
                 @Html.DisplayFor(modelItem => item.Author)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.DisplayFor(modelItem => item.User.Id)
+            </td>
+            <td>
+                <form asp-controller="Preferences" asp-action="AddPreference" method="post">
+                    <input type="hidden" name="MovieId" value="@item.Id"/>
+                    <input type="hidden" name="Type" value="@MoviesReviewer.Enums.PreferenceType.WATCHED"/>
+                    <input type="submit" value="OBEJRZANE" class="btn btn-primary" />
+                </form>
+            </td>
+            <td>
+                <form asp-controller="Preferences" asp-action="AddPreference" method="post">
+                    <input type="hidden" name="MovieId" value="@item.Id" />
+                    <input type="hidden" name="Type" value="@MoviesReviewer.Enums.PreferenceType.TO_WATCH" />
+                    <input type="submit" value="DO OBEJRZENIA" class="btn btn-success" />
+                </form>
             </td>
         </tr>
 }

@@ -19,11 +19,18 @@ namespace MoviesReviewer.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Year = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Author = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Movie", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Movie_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,7 +57,7 @@ namespace MoviesReviewer.Data.Migrations
                         column: x => x.MovieId,
                         principalTable: "Movie",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,8 +86,13 @@ namespace MoviesReviewer.Data.Migrations
                         column: x => x.MovieId,
                         principalTable: "Movie",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Movie_UserId",
+                table: "Movie",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Preference_MovieId",

@@ -240,12 +240,18 @@ namespace MoviesReviewer.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Movie");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Movie", (string)null);
                 });
 
             modelBuilder.Entity("MoviesReviewer.Models.Preference", b =>
@@ -273,7 +279,7 @@ namespace MoviesReviewer.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Preference");
+                    b.ToTable("Preference", (string)null);
                 });
 
             modelBuilder.Entity("MoviesReviewer.Models.Review", b =>
@@ -306,7 +312,7 @@ namespace MoviesReviewer.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Review");
+                    b.ToTable("Review", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -358,6 +364,17 @@ namespace MoviesReviewer.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MoviesReviewer.Models.Movie", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MoviesReviewer.Models.Preference", b =>

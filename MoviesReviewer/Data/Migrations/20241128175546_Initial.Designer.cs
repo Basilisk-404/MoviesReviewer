@@ -12,7 +12,7 @@ using MoviesReviewer.Data;
 namespace MoviesReviewer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241127174059_Initial")]
+    [Migration("20241128175546_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -243,10 +243,16 @@ namespace MoviesReviewer.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Movie");
                 });
@@ -361,6 +367,17 @@ namespace MoviesReviewer.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MoviesReviewer.Models.Movie", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MoviesReviewer.Models.Preference", b =>
