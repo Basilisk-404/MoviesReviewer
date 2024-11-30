@@ -13,6 +13,12 @@ using MoviesReviewer.Models;
 
 namespace MoviesReviewer.Controllers
 {
+    /*
+     * 
+     * Cały moduł zarządzania listą filmów (preferencjami) ma być dostępny tylko dla użytkowników zalogowanych
+     * 
+     */
+    [Authorize]
     public class PreferencesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,7 +31,12 @@ namespace MoviesReviewer.Controllers
         // GET: Preferences
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Preference.Include(p => p.Movie).Include(p => p.User);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            //var applicationDbContext = _context.Preference.Include(p => p.Movie).Include(p => p.User);
+
+            var applicationDbContext = _context.Preference.Include(p => p.Movie).Where(p => p.UserId == userId);
+
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -41,7 +52,10 @@ namespace MoviesReviewer.Controllers
                 .Include(p => p.Movie)
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (preference == null)
+
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (preference == null || preference.UserId != userId)
             {
                 return NotFound();
             }

@@ -38,7 +38,7 @@
             </td>
             @if (item.Type == MoviesReviewer.Enums.PreferenceType.WATCHED)
             {
-                    <td><a asp-action="Create" asp-controller="Reviews">REVIEW</a></td>
+                    <td><a asp-action="Create" asp-controller="Reviews" asp-route-movieId="@item.MovieId">REVIEW</a></td>
             }
             </tr>
 }
