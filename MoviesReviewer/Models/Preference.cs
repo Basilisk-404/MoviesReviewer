@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace MoviesReviewer.Models
 {
@@ -6,6 +7,7 @@ namespace MoviesReviewer.Models
     {
         public int Id { get; set; }
 
+        [Display(Name = "OZNACZENIE")]
         public string Type { get; set; }
 
         public string? UserId { get; set; }

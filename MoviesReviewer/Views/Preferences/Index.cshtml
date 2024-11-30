@@ -6,9 +6,6 @@
 
 <h1>Moje preferencje</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -16,8 +13,10 @@
                 @Html.DisplayNameFor(model => model.Type)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Movie)
+                @Html.DisplayNameFor(model => model.Movie.Title)
             </th>
+            <th></th>
+            <th></th>
             <th></th>
             <th></th>
         </tr>
@@ -26,21 +25,44 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Type)
+                @GetDisplayName(item.Type)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Movie.Id)
+                @Html.DisplayFor(modelItem => item.Movie.Title)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-            @if (item.Type == MoviesReviewer.Enums.PreferenceType.WATCHED)
-            {
-                    <td><a asp-action="Create" asp-controller="Reviews" asp-route-movieId="@item.MovieId">REVIEW</a></td>
-            }
+                <td>
+                    <form asp-controller="Preferences" asp-action="Edit" asp-route-id="@item.Id" method="get">
+                        <input type="submit" value="EDYTUJ" class="btn btn-warning" />
+                    </form>
+                </td>
+                <td>
+                    <form asp-controller="Preferences" asp-action="Details" asp-route-id="@item.Id" method="get">
+                        <input type="submit" value="PODGLĄD" class="btn btn-primary" />
+                    </form>
+                </td>
+                <td>
+                    <form asp-controller="Preferences" asp-action="Delete" asp-route-id="@item.Id" method="get">
+                        <input type="submit" value="USUŃ" class="btn btn-danger" />
+                    </form>
+                </td>
+                <td>
+                    @if (item.Type == MoviesReviewer.Enums.PreferenceType.WATCHED)
+                    {
+                        <form asp-controller="Reviews" asp-action="Create" asp-route-movieId="@item.MovieId" method="get">
+                            <input type="submit" value="OCEŃ FILM" class="btn btn-success" />
+                        </form>
+                    }
+                </td>
             </tr>
 }
     </tbody>
 </table>
+
+@functions {
+    public string GetDisplayName(string preferenceType)
+    {
+        return preferenceType == MoviesReviewer.Enums.PreferenceType.WATCHED
+            ? "OBEJRZANY"
+            : "DO OBEJRZENIA";
+    }
+}

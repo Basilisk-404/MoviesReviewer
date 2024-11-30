@@ -63,32 +63,6 @@ namespace MoviesReviewer.Controllers
             return View(preference);
         }
 
-        // GET: Preferences/Create
-        public IActionResult Create()
-        {
-            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
-        }
-
-        // POST: Preferences/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Type,UserId,MovieId")] Preference preference)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(preference);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Id", preference.MovieId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", preference.UserId);
-            return View(preference);
-        }
-
         // GET: Preferences/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -98,12 +72,24 @@ namespace MoviesReviewer.Controllers
             }
 
             var preference = await _context.Preference.FindAsync(id);
+
             if (preference == null)
             {
                 return NotFound();
             }
-            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Id", preference.MovieId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", preference.UserId);
+
+            preference.Movie = await _context.Movie.FindAsync(preference.MovieId);
+
+            if (preference.Movie == null)
+            {
+                ViewBag.ErrorMessage = "Film, którego preferencję chcesz edytować, nie istnieje";
+                return View("CustomErrorView");
+            }
+
+            ViewData["MovieId"] = preference.MovieId;
+            ViewData["UserId"] = preference.UserId;
+            ViewBag.MovieTitle = preference.Movie.Title;
+
             return View(preference);
         }
 
