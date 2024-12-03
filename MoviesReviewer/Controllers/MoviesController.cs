@@ -94,6 +94,21 @@ namespace MoviesReviewer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Year,Title,Author")] Movie movie)
         {
+            movie.Title = movie.Title.Trim();
+            movie.Author = movie.Author.Trim();
+
+            var similarMovieCount = _context.Movie.Where(m =>
+                m.Year == movie.Year
+                && m.Title == movie.Title
+                && m.Author == movie.Author
+            ).Count();
+
+            if(similarMovieCount > 0)
+            {
+                ViewBag.ErrorMessage = "Film o podanych danych istnieje";
+                return View("CustomErrorView");
+            }
+
             movie.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (ModelState.IsValid)

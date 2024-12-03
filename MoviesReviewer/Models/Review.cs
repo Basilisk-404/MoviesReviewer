@@ -16,6 +16,7 @@ namespace MoviesReviewer.Models
         [MinLength(3)]
         public string? Comment { get; set; }
 
+        [Display(Name = "DATA RECENZJI")]
         public DateTime? CreatedAt { get; set; }
 
         public string? UserId { get; set; }

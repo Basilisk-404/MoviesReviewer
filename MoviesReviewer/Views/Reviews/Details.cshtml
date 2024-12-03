@@ -1,13 +1,13 @@
 ﻿@model MoviesReviewer.Models.Review
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Opinia - podgląd";
 }
 
-<h1>Details</h1>
+<h1>Szczegóły opinii</h1>
 
 <div>
-    <h4>Review</h4>
+    <h4>@Html.DisplayFor(model => model.Movie.Title) (@Html.DisplayFor(model => model.Movie.Year))</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -28,21 +28,9 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CreatedAt)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Movie)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Movie.Id)
-        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edytuj opinię</a> |
+    <a asp-action="My">Wróć do listy opinii</a>
 </div>

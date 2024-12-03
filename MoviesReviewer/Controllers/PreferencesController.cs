@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MoviesReviewer.Data;
+using MoviesReviewer.Dtos;
 using MoviesReviewer.Enums;
 using MoviesReviewer.Models;
 
@@ -90,6 +91,13 @@ namespace MoviesReviewer.Controllers
             ViewData["UserId"] = preference.UserId;
             ViewBag.MovieTitle = preference.Movie.Title;
 
+            List<PreferenceTypeDto> preferenceTypes = new List<PreferenceTypeDto>();
+
+            preferenceTypes.Add(new PreferenceTypeDto(PreferenceType.WATCHED, "OBEJRZANY"));
+            preferenceTypes.Add(new PreferenceTypeDto(PreferenceType.TO_WATCH, "DO OBEJRZENIA"));
+
+            ViewData["Type"] = new SelectList(preferenceTypes, "Type", "Display", preference.Type);
+
             return View(preference);
         }
 
@@ -125,8 +133,21 @@ namespace MoviesReviewer.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Id", preference.MovieId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", preference.UserId);
+            // ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Id", preference.MovieId);
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", preference.UserId);
+
+            preference.Movie = await _context.Movie.FindAsync(preference.MovieId);
+
+            if (preference.Movie == null)
+            {
+                ViewBag.ErrorMessage = "Film, którego preferencję chcesz edytować, nie istnieje";
+                return View("CustomErrorView");
+            }
+
+            ViewData["MovieId"] = preference.MovieId;
+            ViewData["UserId"] = preference.UserId;
+            ViewBag.MovieTitle = preference.Movie.Title;
+
             return View(preference);
         }
 

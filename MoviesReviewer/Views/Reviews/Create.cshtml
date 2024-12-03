@@ -1,12 +1,12 @@
 ﻿@model MoviesReviewer.Models.Review
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Dodaj opinię";
 }
 
-<h1>Create</h1>
+<h1>Dodaj opinię</h1>
 
-<h4>Review</h4>
+<h4>Oceniasz: @ViewBag.MovieTitle</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -31,7 +31,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-controller="Preferences">Wróć do listy Twoich preferencji</a>
 </div>
 
 @section Scripts {

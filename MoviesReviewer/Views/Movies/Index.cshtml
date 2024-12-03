@@ -1,15 +1,15 @@
 ﻿@model IEnumerable<MoviesReviewer.Models.Movie>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Dostępne filmy";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Dodaj nowy film do publicznej bazy</a>
 </p>
-<table class="table">
+<table class="table" style="text-align: center;">
     <thead>
         <tr>
             <th>
@@ -21,8 +21,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.Year)
             </th>
-            <th></th>
-            <th></th>
+            <th colspan="2">AKCJE</th>
+            
         </tr>
     </thead>
     <tbody>
@@ -41,7 +41,7 @@
                 <form asp-controller="Preferences" asp-action="AddPreference" method="post">
                     <input type="hidden" name="MovieId" value="@item.Id"/>
                     <input type="hidden" name="Type" value="@MoviesReviewer.Enums.PreferenceType.WATCHED"/>
-                    <input type="submit" value="OBEJRZANE" class="btn btn-primary" />
+                    <input type="submit" value="OBEJRZANY" class="btn btn-primary" />
                 </form>
             </td>
             <td>

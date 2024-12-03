@@ -1,7 +1,7 @@
 ﻿@model MoviesReviewer.Models.Review
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edycja opinii";
 }
 
 <h1>Edycja recenzji</h1>
@@ -27,15 +27,16 @@
                 <input asp-for="Comment" class="form-control" />
                 <span asp-validation-for="Comment" class="text-danger"></span>
             </div>
+            <br/>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="ZAPISZ" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="My">Wróć do listy Twoich opinii</a>
 </div>
 
 @section Scripts {

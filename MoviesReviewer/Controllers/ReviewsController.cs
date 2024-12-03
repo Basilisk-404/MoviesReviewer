@@ -86,10 +86,10 @@ namespace MoviesReviewer.Controllers
          */
         // GET: Reviews/Create/{movieId}
         [Authorize]
-        public IActionResult Create(int? movieId)
+        public IActionResult Create(int? id)
         {
 
-            var movie = _context.Movie.Find(movieId);
+            var movie = _context.Movie.Find(id);
 
             if(movie == null)
             {
@@ -99,7 +99,7 @@ namespace MoviesReviewer.Controllers
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var preferenceExists = _context.Preference.Where(
-                p => p.MovieId == movieId 
+                p => p.MovieId == id
                 && p.UserId == userId
                 && p.Type == PreferenceType.WATCHED
                 ).Count();
@@ -110,8 +110,20 @@ namespace MoviesReviewer.Controllers
                 return View("CustomErrorView");
             }
 
+            var reviewExists = _context.Review.Where(p =>
+                p.MovieId == movie.Id
+                && p.UserId == userId
+                ).Count();
+
+            if (reviewExists > 0)
+            {
+                ViewBag.ErrorMessage = "Wybrany film został już przez Ciebie oceniony";
+                return View("CustomErrorView");
+            }
+
             //ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Id");
             ViewData["MovieId"] = movie.Id;
+            ViewData["MovieTitle"] = movie.Title;
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
@@ -265,7 +277,7 @@ namespace MoviesReviewer.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(My));
             }
             ViewData["MovieId"] = review.MovieId;
             ViewData["UserId"] = userId;
@@ -322,7 +334,7 @@ namespace MoviesReviewer.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(My));
         }
 
         private bool ReviewExists(int id)
