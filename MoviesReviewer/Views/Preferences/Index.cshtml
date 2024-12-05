@@ -1,10 +1,13 @@
 ﻿@model IEnumerable<MoviesReviewer.Models.Preference>
 
 @{
-    ViewData["Title"] = "Moje preferencje";
+    ViewData["Title"] = "Moje filmy";
 }
 
-<h1>Moje preferencje</h1>
+<h1>Moje Filmy</h1>
+<p>
+    <a asp-action="Create" asp-controller="Movies">Dodaj nowy film do publicznej bazy</a>
+</p>
 
 <table class="table">
     <thead>

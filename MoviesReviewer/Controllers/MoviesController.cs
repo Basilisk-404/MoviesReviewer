@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using MoviesReviewer.Data;
+using MoviesReviewer.Enums;
 using MoviesReviewer.Models;
 
 namespace MoviesReviewer.Controllers
@@ -54,21 +56,6 @@ namespace MoviesReviewer.Controllers
             return View(movie);
         }
 
-        // GET: Movies
-        /*
-         * 
-         * Private list of only my movies
-         * 
-         */
-        [Authorize]
-        public async Task<IActionResult> My()
-        {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var applicationDbContext = _context.Movie.Include(m => m.User).Where(m => m.UserId == userId);
-            return View(await applicationDbContext.ToListAsync());
-        }
-
         // GET: Movies/Create
         /*
          * 
@@ -109,12 +96,23 @@ namespace MoviesReviewer.Controllers
                 return View("CustomErrorView");
             }
 
-            movie.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            movie.UserId = userId;
 
             if (ModelState.IsValid)
             {
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
+
+                Preference preference = new Preference();
+                preference.Type = PreferenceType.TO_WATCH;
+                preference.UserId = userId;
+                preference.MovieId = movie.Id;
+
+                _context.Add(preference);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", movie.UserId);
