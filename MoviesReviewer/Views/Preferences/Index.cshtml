@@ -48,7 +48,8 @@
                 <td>
                     @if (item.Type == MoviesReviewer.Enums.PreferenceType.WATCHED)
                     {
-                        <form asp-controller="Reviews" asp-action="Create" asp-route-id="@item.MovieId" method="get">
+                        <form asp-controller="Reviews" asp-action="Create" method="get">
+                            <input type="hidden" name="mov" value="@item.MovieId" />
                             <input type="submit" value="OCEŃ FILM" class="btn btn-success" />
                         </form>
                     }

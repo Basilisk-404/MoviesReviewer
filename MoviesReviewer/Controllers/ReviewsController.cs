@@ -86,10 +86,10 @@ namespace MoviesReviewer.Controllers
          */
         // GET: Reviews/Create/{movieId}
         [Authorize]
-        public IActionResult Create(int? id)
+        public IActionResult Create(int? mov)
         {
 
-            var movie = _context.Movie.Find(id);
+            var movie = _context.Movie.Find(mov);
 
             if(movie == null)
             {
@@ -99,7 +99,7 @@ namespace MoviesReviewer.Controllers
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var preferenceExists = _context.Preference.Where(
-                p => p.MovieId == id
+                p => p.MovieId == mov
                 && p.UserId == userId
                 && p.Type == PreferenceType.WATCHED
                 ).Count();
