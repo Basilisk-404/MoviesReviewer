@@ -26,13 +26,11 @@ namespace MoviesReviewer.Controllers
          * 
          * Wszystkie istniejące opinie - możemy wyświetlać wszystko
          * 
-         * TODO: Dodać DTO żeby nie przekazywać USER ID
-         * 
          */
         // GET: Reviews
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Review.Include(r => r.Movie).Include(r => r.User);
+            var applicationDbContext = _context.Review.Include(r => r.Movie);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -94,6 +92,8 @@ namespace MoviesReviewer.Controllers
             if(movie == null)
             {
                 ViewBag.ErrorMessage = "Film o podanym ID nie istnieje";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Preferences";
                 return View("CustomErrorView");
             }
 
@@ -107,6 +107,8 @@ namespace MoviesReviewer.Controllers
             if (preferenceExists == 0)
             {
                 ViewBag.ErrorMessage = "Wybrany film nie został przez Ciebie obejrzany, więc nie możesz wystawić opinii";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Preferences";
                 return View("CustomErrorView");
             }
 
@@ -118,6 +120,8 @@ namespace MoviesReviewer.Controllers
             if (reviewExists > 0)
             {
                 ViewBag.ErrorMessage = "Wybrany film został już przez Ciebie oceniony";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Reviews";
                 return View("CustomErrorView");
             }
 
@@ -146,6 +150,8 @@ namespace MoviesReviewer.Controllers
             if (movie == null)
             {
                 ViewBag.ErrorMessage = "Film o podanym ID nie istnieje";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Preferences";
                 return View("CustomErrorView");
             }
 
@@ -160,6 +166,8 @@ namespace MoviesReviewer.Controllers
             if (preferenceExists == 0)
             {
                 ViewBag.ErrorMessage = "Wybrany film nie został przez Ciebie obejrzany, więc nie możesz wystawić opinii";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Preferences";
                 return View("CustomErrorView");
             }
 
@@ -171,6 +179,8 @@ namespace MoviesReviewer.Controllers
             if (reviewExists > 0)
             {
                 ViewBag.ErrorMessage = "Wybrany film został już przez Ciebie oceniony";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Preferences";
                 return View("CustomErrorView");
             }
 
@@ -216,6 +226,8 @@ namespace MoviesReviewer.Controllers
             if (review.Movie == null)
             {
                 ViewBag.ErrorMessage = "Film recenzowany tą opinią nie istnieje";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Preferences";
                 return View("CustomErrorView");
             }
 
@@ -253,6 +265,8 @@ namespace MoviesReviewer.Controllers
             if (correspondingMovie == null)
             {
                 ViewBag.ErrorMessage = "Film recenzowany tą opinią nie istnieje";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Preferences";
                 return View("CustomErrorView");
             }
 

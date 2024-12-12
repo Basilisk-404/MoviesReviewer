@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -33,8 +29,6 @@ namespace MoviesReviewer.Controllers
         public async Task<IActionResult> Index()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            //var applicationDbContext = _context.Preference.Include(p => p.Movie).Include(p => p.User);
 
             var applicationDbContext = _context.Preference.Include(p => p.Movie).Where(p => p.UserId == userId);
 
@@ -84,6 +78,8 @@ namespace MoviesReviewer.Controllers
             if (preference.Movie == null)
             {
                 ViewBag.ErrorMessage = "Film, którego preferencję chcesz edytować, nie istnieje";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Preferences";
                 return View("CustomErrorView");
             }
 
@@ -133,14 +129,14 @@ namespace MoviesReviewer.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            // ViewData["MovieId"] = new SelectList(_context.Movie, "Id", "Id", preference.MovieId);
-            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", preference.UserId);
 
             preference.Movie = await _context.Movie.FindAsync(preference.MovieId);
 
             if (preference.Movie == null)
             {
                 ViewBag.ErrorMessage = "Film, którego preferencję chcesz edytować, nie istnieje";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Preferences";
                 return View("CustomErrorView");
             }
 
@@ -203,6 +199,8 @@ namespace MoviesReviewer.Controllers
             if(preferenceExists != 0)
             {
                 ViewBag.ErrorMessage = "Wybrany film istnieje w Twoich preferencjach";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Movies";
                 return View("CustomErrorView");
             }
           
@@ -215,7 +213,9 @@ namespace MoviesReviewer.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.ErrorMessage = "An error occured while procesing your request. Please try again later.";
+            ViewBag.ErrorMessage = "Wystąpił błąd podczas przetwarzania żądania. Spróbuj ponownie później";
+            ViewBag.Action = "Index";
+            ViewBag.Controller = "Preferences";
             return View("CustomErrorView");
         }
 

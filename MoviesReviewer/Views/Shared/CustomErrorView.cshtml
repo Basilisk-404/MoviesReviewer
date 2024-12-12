@@ -1,4 +1,12 @@
-﻿Ops something went wrong
-
+﻿
 <br />
-Message: @ViewBag.ErrorMessage
+
+<h2>Ta akcja jest niedozwolona</h2>
+
+<h4>Powód: @ViewBag.ErrorMessage</h4>
+
+<br/>
+
+<form asp-action="@ViewBag.Action" asp-controller="@ViewBag.Controller" method="get">
+    <input type="submit" value="POWRÓT" class="btn btn-primary" />
+</form>
