@@ -104,6 +104,14 @@ namespace MoviesReviewer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Type,UserId,MovieId")] Preference preference)
         {
+            if (preference.Type != PreferenceType.TO_WATCH && preference.Type != PreferenceType.WATCHED)
+            {
+                ViewBag.ErrorMessage = "Wybrany typ preferencji nie jest dozwolony";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Movies";
+                return View("CustomErrorView");
+            }
+
             if (id != preference.Id)
             {
                 return NotFound();
@@ -157,7 +165,6 @@ namespace MoviesReviewer.Controllers
 
             var preference = await _context.Preference
                 .Include(p => p.Movie)
-                .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (preference == null)
             {
@@ -191,6 +198,14 @@ namespace MoviesReviewer.Controllers
         public async Task<IActionResult> AddPreference([Bind("Id, Type, MovieId")] Preference preference)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if(preference.Type != PreferenceType.TO_WATCH && preference.Type != PreferenceType.WATCHED)
+            {
+                ViewBag.ErrorMessage = "Wybrany typ preferencji nie jest dozwolony";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Movies";
+                return View("CustomErrorView");
+            }
 
             var preferenceExists = _context.Preference
                 .Where(p => p.MovieId == preference.MovieId && p.UserId == userId)
