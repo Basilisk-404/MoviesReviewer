@@ -170,7 +170,10 @@ namespace MoviesReviewer.Controllers
             var preference = await _context.Preference
                 .Include(p => p.Movie)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (preference == null)
+
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (preference == null || preference.UserId != userId)
             {
                 return NotFound();
             }
@@ -184,7 +187,10 @@ namespace MoviesReviewer.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var preference = await _context.Preference.FindAsync(id);
-            if (preference != null)
+
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (preference != null && preference.UserId == userId)
             {
                 _context.Preference.Remove(preference);
             }
