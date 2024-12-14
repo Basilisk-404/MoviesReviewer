@@ -68,7 +68,9 @@ namespace MoviesReviewer.Controllers
 
             var preference = await _context.Preference.FindAsync(id);
 
-            if (preference == null)
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (preference == null || preference.UserId != userId)
             {
                 return NotFound();
             }
@@ -112,7 +114,9 @@ namespace MoviesReviewer.Controllers
                 return View("CustomErrorView");
             }
 
-            if (id != preference.Id)
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (id != preference.Id || preference.UserId != userId)
             {
                 return NotFound();
             }
