@@ -121,6 +121,16 @@ namespace MoviesReviewer.Controllers
                 return NotFound();
             }
 
+            preference.Movie = await _context.Movie.FindAsync(preference.MovieId);
+
+            if (preference.Movie == null)
+            {
+                ViewBag.ErrorMessage = "Film, którego preferencję chcesz edytować, nie istnieje";
+                ViewBag.Action = "Index";
+                ViewBag.Controller = "Preferences";
+                return View("CustomErrorView");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -140,16 +150,6 @@ namespace MoviesReviewer.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-
-            preference.Movie = await _context.Movie.FindAsync(preference.MovieId);
-
-            if (preference.Movie == null)
-            {
-                ViewBag.ErrorMessage = "Film, którego preferencję chcesz edytować, nie istnieje";
-                ViewBag.Action = "Index";
-                ViewBag.Controller = "Preferences";
-                return View("CustomErrorView");
             }
 
             ViewData["MovieId"] = preference.MovieId;
